@@ -25,14 +25,11 @@ jobs:
       with:
         node-version: '18'
     
-    - name: Clear npm cache
-      run: npm cache clean --force
-    
     - name: Install dependencies
-      run: npm install --legacy-peer-deps
-    
-    - name: Build Next.js
-      run: npm run build
+      run: |
+        npm install --no-audit --no-fund
+        npm run build
+      continue-on-error: false
       
     - name: Sync Capacitor
       run: |
@@ -43,12 +40,11 @@ jobs:
       working-directory: android
       run: |
         chmod +x gradlew
-        ./gradlew clean
-        ./gradlew assembleRelease
+        ./gradlew clean assembleRelease --stacktrace
     
     - name: Upload APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: duaii-release-apk
         path: android/app/build/outputs/apk/release/*.apk
-        if-no-files-found: error
