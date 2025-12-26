@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run full lint on pre-commit to enforce code quality for production
+npm run lint
